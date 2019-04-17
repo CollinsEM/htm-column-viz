@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>HTM Test Bed</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				background:#777;
+				padding:0;
+				margin:0;
+				overflow:hidden;
+			}
+			#info {
+				position: absolute;
+				top: 0px;
+				width: 100%;
+				color: #ffffff;
+				padding: 5px;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+			}
+			a {
+				color: #ffffff;
+			}
+			#overlay {
+				position: fixed;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				height: 100%;
+				width: 100%;
+				top: 0;
+				z-index: 999;
+			}
+			#overlay > div {
+				height: 128px;
+				width: 128px;
+				border: 1px solid white;
+			}
+		</style>
+		<script src="js/libs/dat.gui.min.js"></script>
+		<script src="js/libs/stats.min.js"></script>
+		<script src="js/libs/three.min.js"></script>
+		<script src="js/libs/OrbitControls.js"></script>
+		<script src="js/gui.js"></script>
+		<script src="js/mini_column.js"></script>
+		<script src="js/temporal_memory.js"></script>
+		<script src="js/column.js"></script>
+		<script src="js/apical.js"></script>
+		<script src="js/distal.js"></script>
+		<script src="js/proximal.js"></script>
+    <script src="js/cortex.js"></script>
+    <script src="js/synapse.js"></script>
+		<script src="js/neuron.js"></script>
+		<script src="js/encoder.js"></script>
+		<script src="js/main.js"></script>
+    <script type="x-shader/x-vertex" id="vertexshader">
+		 attribute float size;
+		 attribute vec3 customColor;
+		 varying vec3 vColor;
+		 void main() {
+			 vColor = customColor;
+			 vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+			 gl_PointSize = size * ( 300.0 / -mvPosition.z );
+			 gl_Position = projectionMatrix * mvPosition;
+		 }
+		</script>
+		<script type="x-shader/x-fragment" id="fragmentshader">
+		 uniform vec3 color;
+		 uniform sampler2D texture;
+		 varying vec3 vColor;
+		 void main() {
+			 gl_FragColor = vec4( color * vColor, 1.0 );
+			 gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+		 }
+		</script>
+	</head>
+	<body>
+		<div id="container"></div>
+		<div id="info"></div>
+	</body>
+</html>
