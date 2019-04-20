@@ -62,7 +62,7 @@ function initScene() {
   cortex = new CortexMesh(numLayers, numColumns, 1);
 	group.add( cortex );
 
-  var NI=4, NJ=4;
+  var NI=2, NJ=2;
   L4 = new TemporalMemoryLayer(NI, NJ, 16, cortex.nodeData[0]);
   L4.scale.set((NI-1)*r/(2*NI), 100, (NJ-1)*r/(2*NJ));
   group.add(L4);
@@ -89,21 +89,21 @@ function onWindowResize() {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 }
 //--------------------------------------------------------------------
+var count = 0;
 function animate() {
-  // // update particle positions if moving
-  // if (gui.moving) {
-  //   // cortex.updateNodePos();
-  //   cortex.updateDistalConnections();
-  //   cortex.updateProximalConnections();
-  //   cortex.updateProximalPos();
-  // }
-  var input;
   if (cortex) {
     cortex.updateNodeStates();
     cortex.updateDistalCol();
     cortex.updateProximalCol();
     if (L4) {
+      L4.updatePredictions();
       L4.setInput( cortex.nodeData[0] );
+      if (count < 10) {
+        console.log(count++);
+        L4.miniColumns.forEach( function(mc) {
+          console.log(mc.predicted, mc.activated);
+        });
+      }
     }
   }
   

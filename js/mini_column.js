@@ -1,5 +1,5 @@
 class MiniColumn extends THREE.Group {
-  constructor(numNodes) {
+  constructor(numNodes, numInputs, layer) {
     super();
     this.numNodes = numNodes;
     // this.activated = (Math.random() > 0.8);
@@ -9,7 +9,11 @@ class MiniColumn extends THREE.Group {
     this.nodeData = [];
     this.proxNodes = [];
     this.proxPerms = undefined;
+    this.numInputs = numInputs;
     this.initNodes();
+    this.distThreshold = 0.5;
+    this.proxThreshold = 0.5;
+    this.initProximalSynapses(numInputs);
   }
   initNodes() {
     this.nodeUniforms = {
@@ -67,6 +71,37 @@ class MiniColumn extends THREE.Group {
 	  this.helper.material.opacity = 0.5;
 	  this.add( this.helper );
   }
+  initProximalSynapses() {
+    this.proxPerms = new Float32Array(this.numInputs);
+    for (var k=0; k<this.numInputs; ++k) {
+      // Choose a random permanence weight close to the proximal
+      // synapse threshold.
+      this.proxPerms[k] = this.proxThreshold + 0.1*(Math.random() - 0.5);
+      if (this.proxPerms[k] > this.proxThreshold) {
+        this.proxNodes.push(k);
+      }
+    }
+  }
+  initDistalSynapses() {
+    this.nodeData.forEach( function(node, i) {
+      tgt.initDistalSynapses(layer);
+    }, this );
+    // For each node within a mini-column, initialize its distal
+    // connections to all other nodes in this layer.
+      tgt.distPerms = new Float32Array(NI*NJ*NPC);
+        for (var m=0; m<this.numColumns; ++m) {
+          for (var n=0; n<NPC; ++n) {
+            // Choose a random permanence weight close to the distal
+            // synapse threshold.
+            tgt.distPerms[m*NPC+n] = this.distThreshold + 0.1*(Math.random() - 0.5);
+            if (tgt.distPerms[m*NPC+n] > this.distThreshold) {
+              tgt.distNodes.push({col: m, nod: n});
+            }
+          }
+        }
+      }, this);
+    }, this);
+
   //------------------------------------------------------------------
   // Update Neuron States
   //------------------------------------------------------------------

@@ -440,20 +440,19 @@ class CortexMesh extends THREE.Object3D {
 	  var sizes = this.nodeSiz[0];
     // Update input layer
 	  for ( var i=0, i0=0, i1=1, i2=2; i<NC; ++i, i0+=3, i1+=3, i2+=3 ) {
-		  var iData = this.nodeData[0][i];
-      if (!iData.activated && Math.random() > 0.99) {
+      if (!this.nodeData[0][i].activated && Math.random() > 0.99) {
         sizes[i] = 100;
         color[i0] = 0;
         color[i1] = 1;
         color[i2] = 0;
-        iData.activated = true;
+        this.nodeData[0][i].activated = true;
       }
       else {
         sizes[i] *= 0.95;
         color[i0] *= 0.95;
         color[i1] *= 0.95;
         color[i2] *= 0.95;
-        iData.activated = (sizes[i] > 5);
+        this.nodeData[0][i].activated = (sizes[i] > 5);
       }
     }
 	  this.nodeGeom[0].attributes.customColor.needsUpdate = true;
